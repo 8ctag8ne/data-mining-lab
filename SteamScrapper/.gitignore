@@ -1,0 +1,5 @@
+node_modules/
+dist/
+test-results/
+failsafe.txt
+steam_ids.csv

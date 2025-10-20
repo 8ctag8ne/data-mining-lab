@@ -1,0 +1,28 @@
+{
+  "name": "data-mining-lab",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/8ctag8ne/data-mining-lab.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/8ctag8ne/data-mining-lab/issues"
+  },
+  "homepage": "https://github.com/8ctag8ne/data-mining-lab#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.9.0"
+  },
+  "dependencies": {
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7",
+    "xml2js": "^0.6.2"
+  }
+}
