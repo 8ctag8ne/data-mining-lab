@@ -1,8 +1,9 @@
-import { Page } from '@playwright/test';
+import { Page, Response } from '@playwright/test';
 import { parseStringPromise } from 'xml2js';
 
 export class SteamXmlProfilePage {
   private readonly page: Page;
+  private response : Response | null = null;
 
   constructor(page: Page) {
     this.page = page;
@@ -11,7 +12,7 @@ export class SteamXmlProfilePage {
   async openXmlProfile(link: string): Promise<void> {
     const url = link.endsWith('/?xml=1') ? link : `${link}/?xml=1`;
 
-    await this.page.goto(url, { waitUntil: 'domcontentloaded' });
+    this.response = await this.page.goto(url, { waitUntil: 'domcontentloaded' });
   }
 
   isSteamId64(value: string): boolean {
@@ -19,7 +20,7 @@ export class SteamXmlProfilePage {
   }
 
   async getSteamId64(): Promise<string | null> {
-    const xmlContent = await this.page.content();
+    const xmlContent = await this.response?.text();
     try {
       const parsed = await parseStringPromise(xmlContent);
       return parsed?.profile?.steamID64?.[0] || null;
@@ -30,7 +31,7 @@ export class SteamXmlProfilePage {
   }
 
   async getProfileData(): Promise<Record<string, string | null>> {
-    const xmlContent = await this.page.content();
+    const xmlContent = await this.response?.text();
     try {
       const parsed = await parseStringPromise(xmlContent);
       return {

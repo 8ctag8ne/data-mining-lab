@@ -29,8 +29,10 @@ async function processUser(page : Page, href: string) {
     }
 
     if (steamId) {
+        console.log(`Found steamID64: ${steamId} for profile ${href}`);
         await writeCsvRow('steam_ids.csv', [steamId]);
     } else {
+        console.log(`steamID64 not found for profile ${href}, logging to failsafe.txt`);
         await appendToFile('failsafe.txt', href);
     }
 }
