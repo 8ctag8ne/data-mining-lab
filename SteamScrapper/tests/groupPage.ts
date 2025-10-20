@@ -31,7 +31,7 @@ export class GroupPage {
     }
 
     async waitBetweenPages(): Promise<void> {
-        console.log(`Waiting 5 seconds before next page...`);
-        await this.page.waitForTimeout(5000);
+        console.log(`Waiting 3 seconds before next page...`);
+        await this.page.waitForTimeout(3000);
     }
 }
