@@ -1,9 +1,9 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, Page } from '@playwright/test';
 import { GroupPage } from '../pages/groupPage';
 import { writeCsvRow } from '../utils/csvWriter';
 import { appendToFile } from '../utils/fileWriter';
 import { SteamXmlProfilePage } from '../pages/SteamXmlProfilePage';
-import {GROUP_URL, START_PAGE, END_PAGE, N, LOGGING} from '../constants'
+import {GROUP_URL, START_PAGE, END_PAGE, N, LOGGING, FAILSAFE_FILENAME, STEAM_IDS_FILENAME} from '../constants'
 
 function getNRandomPages(n: number, startPage: number, endPage: number) : number[] {
     if(endPage - startPage + 1 < n) {
@@ -44,12 +44,12 @@ async function processUser(page : Page, href: string) {
         if(LOGGING){
             console.log(`Found steamID64: ${steamId} for profile ${href}`);
         }
-        await writeCsvRow('steam_ids.csv', [steamId]);
+        await writeCsvRow(STEAM_IDS_FILENAME, [steamId]);
     } else {
         if(LOGGING){
             console.log(`steamID64 not found for profile ${href}, logging to failsafe.txt`);
         }
-        await appendToFile('failsafe.txt', href);
+        await appendToFile(FAILSAFE_FILENAME, href);
     }
 }
 
