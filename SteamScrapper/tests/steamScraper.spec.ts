@@ -1,13 +1,9 @@
 import { test, expect, Page } from '@playwright/test';
-import { GroupPage } from './groupPage';
+import { GroupPage } from '../pages/groupPage';
 import { writeCsvRow } from '../utils/csvWriter';
 import { appendToFile } from '../utils/fileWriter';
-import { SteamXmlProfilePage } from './SteamXmlProfilePage';
-
-const GROUP_URL = 'https://steamcommunity.com/groups/ukraine';
-const START_PAGE = 1;
-const END_PAGE = 1694;
-const N = 20; // Number of random pages to scrape
+import { SteamXmlProfilePage } from '../pages/SteamXmlProfilePage';
+import {GROUP_URL, START_PAGE, END_PAGE, N, LOGGING} from '../constants'
 
 function getNRandomPages(n: number, startPage: number, endPage: number) : number[] {
     if(endPage - startPage + 1 < n) {
@@ -45,10 +41,14 @@ async function processUser(page : Page, href: string) {
     }
 
     if (steamId) {
-        console.log(`Found steamID64: ${steamId} for profile ${href}`);
+        if(LOGGING){
+            console.log(`Found steamID64: ${steamId} for profile ${href}`);
+        }
         await writeCsvRow('steam_ids.csv', [steamId]);
     } else {
-        console.log(`steamID64 not found for profile ${href}, logging to failsafe.txt`);
+        if(LOGGING){
+            console.log(`steamID64 not found for profile ${href}, logging to failsafe.txt`);
+        }
         await appendToFile('failsafe.txt', href);
     }
 }
@@ -65,11 +65,15 @@ test('Steam group scraper', async ({ page }) => {
         await groupPage.goToMembersPage(GROUP_URL, pagesToScrape[i]);
 
         const hrefs = await groupPage.getMemberLinks();
-        console.log(`Found ${hrefs.length} profile links on page ${i+1}`);
+        if(LOGGING){
+            console.log(`Found ${hrefs.length} profile links on page ${i+1}`);
+        }
 
         for (let j = 0; j < hrefs.length; j++) {
             const href = hrefs[j];
-            console.log(`Processing user ${j + 1}/${hrefs.length} on page ${i+1}: ${href}`);
+            if(LOGGING){
+                console.log(`Processing user ${j + 1}/${hrefs.length} on page ${i+1}: ${href}`);
+            }
             await processUser(page, href);
         }
 

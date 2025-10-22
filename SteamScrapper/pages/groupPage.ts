@@ -1,4 +1,5 @@
 import { Locator, Page } from '@playwright/test';
+import { LOGGING } from '../constants';
 
 export class GroupPage {
     readonly page: Page;
@@ -25,13 +26,17 @@ export class GroupPage {
     async goToMembersPage(baseUrl: string, pageNumber: number): Promise<void> {
         const url = `${baseUrl}/members?p=${pageNumber}`;
         this.pageCounter = pageNumber;
-        console.log(`Navigating to page ${pageNumber}: ${url}`);
+        if(LOGGING){
+            console.log(`Navigating to page ${pageNumber}: ${url}`);
+        }
 
         await this.page.goto(url, { waitUntil: 'domcontentloaded' });
     }
 
     async waitBetweenPages(): Promise<void> {
-        console.log(`Waiting 3 seconds before next page...`);
-        await this.page.waitForTimeout(3000);
+        if(LOGGING){
+            console.log(`Waiting 2 seconds before next page...`);
+        }
+        await this.page.waitForTimeout(2000);
     }
 }
