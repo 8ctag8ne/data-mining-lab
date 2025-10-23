@@ -20,8 +20,11 @@ export class SteamUser {
     public personastateflags?: number,
     // Additional fields
     public totalPlaytimeHours?: number,
-    public totalGames?: number
-  ) {}
+    public totalGames?: number,
+    public ownedGames?: SteamGame[],
+  ) {
+    this.profilestate = profilestate ?? 0;
+  }
 }
 
 // basic game model (from GetOwnedGames API)
@@ -39,6 +42,11 @@ export class SteamGame {
     public img_icon_url?: string,
     public has_community_visible_stats?: boolean,
     public content_descriptorids?: number[],
+    public owners?: string, //additional field from SteamSpy
+    // Additional parsed fields
+    public genres?: string[], // parsed from genre field
+    public releaseYear?: number,
+    public topTags?: string[] // top tags extracted from tags object
   ) {}
 }
 
@@ -65,10 +73,6 @@ export class SteamGameDetails {
     public languages?: string,
     public genre?: string,
     public tags?: Record<string, number>,
-    // Additional parsed fields
-    public genres?: string[], // parsed from genre field
-    public releaseYear?: number,
-    public topTags?: string[] // top tags extracted from tags object
   ) {}
 }
 

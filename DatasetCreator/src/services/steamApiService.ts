@@ -20,7 +20,7 @@ export class SteamApiService {
         params: {
           key: this.apiKey,
           steamid: steamId,
-          include_appinfo: 1,
+          include_appinfo: 0,
           format: 'json',
         },
       }
@@ -55,6 +55,5 @@ export class SteamApiService {
     );
 
     return response.data;
-
   }
 }
