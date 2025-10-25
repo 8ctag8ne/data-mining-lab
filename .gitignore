@@ -3,6 +3,10 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+failsafe.txt
+steam_ids.csv
+steam_ids_small.csv
+
 # C extensions
 *.so
 

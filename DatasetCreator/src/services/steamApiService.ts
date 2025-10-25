@@ -1,9 +1,10 @@
 import axios, { AxiosInstance } from 'axios';
-import { SteamGame, SteamGameDetails, SteamOwnedGamesResponse, SteamPlayerSummariesResponse } from '../models/steamModels'; // adjust path as needed
+import { SteamGameDetails, SteamOwnedGamesResponse, SteamPlayerSummariesResponse } from '../models/steamModels'; // adjust path as needed
 
 export class SteamApiService {
-  private axiosInstance: AxiosInstance;
-  private apiKey: string;
+  private readonly axiosInstance: AxiosInstance;
+  private readonly apiKey: string;
+  private steamSpyLastCallTimestamp: number = 0;
 
   constructor(apiKey: string) {
     this.apiKey = apiKey;
@@ -20,7 +21,7 @@ export class SteamApiService {
         params: {
           key: this.apiKey,
           steamid: steamId,
-          include_appinfo: 0,
+          include_appinfo: 1,
           format: 'json',
         },
       }
@@ -44,16 +45,26 @@ export class SteamApiService {
     return response.data;
   }
   async getGameDetails(appId: number): Promise<SteamGameDetails>{
+    // if(Date.now() - this.steamSpyLastCallTimestamp < 1000)
+    // {
+    //   await delay(1000 - (Date.now() - this.steamSpyLastCallTimestamp));
+    // }
+
     const response = await this.axiosInstance.get<SteamGameDetails>(
-        `https://steamspy.com/api.php`,
-        {
-            params: {
-                request: 'appdetails',
-                appid: appId
-            },
-        }
+      `https://steamspy.com/api.php`,
+      {
+        params: {
+          request: 'appdetails',
+          appid: appId
+        },
+      }
     );
+    this.steamSpyLastCallTimestamp = Date.now();
 
     return response.data;
   }
+}
+
+export async function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }

@@ -37,6 +37,6 @@ export class GroupPage {
         if(LOGGING){
             console.log(`Waiting 2 seconds before next page...`);
         }
-        await this.page.waitForTimeout(2000);
+        await this.page.waitForTimeout(1000);
     }
 }

@@ -65,7 +65,7 @@ test('Steam group scraper', async ({ page }) => {
         await groupPage.goToMembersPage(GROUP_URL, pagesToScrape[i]);
 
         const hrefs = await groupPage.getMemberLinks();
-        if(LOGGING){
+        if(LOGGING || true){
             console.log(`Found ${hrefs.length} profile links on page ${i+1}`);
         }
 

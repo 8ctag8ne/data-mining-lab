@@ -21,7 +21,7 @@ export class SteamUser {
     // Additional fields
     public totalPlaytimeHours?: number,
     public totalGames?: number,
-    public ownedGames?: SteamGame[],
+    public ownedGames?: any[], //it's actually an array of SteamGame
   ) {
     this.profilestate = profilestate ?? 0;
   }
@@ -48,6 +48,26 @@ export class SteamGame {
     public releaseYear?: number,
     public topTags?: string[] // top tags extracted from tags object
   ) {}
+
+  toObject() : any {
+    return {
+      appid: this.appid,
+      name: this.name,
+      playtime_forever: this.playtime_forever,
+      playtime_windows_forever: this.playtime_windows_forever,
+      playtime_mac_forever: this.playtime_mac_forever,
+      playtime_linux_forever: this.playtime_linux_forever,
+      playtime_deck_forever: this.playtime_deck_forever,
+      rtime_last_played: this.rtime_last_played,
+      playtime_disconnected: this.playtime_disconnected,
+      img_icon_url: this.img_icon_url,
+      has_community_visible_stats: this.has_community_visible_stats,
+      content_descriptorids: this.content_descriptorids,
+      owners: this.owners,
+      genres: this.genres,
+      topTags: this.topTags,
+    };
+  }
 }
 
 // Full information about the game (from SteamSpy API)

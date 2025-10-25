@@ -1,11 +1,11 @@
 import { MongoClient, Db, Collection, Filter } from 'mongodb';
-import { SteamUser, SteamGame } from '../models/steamModels';
+import { SteamUser, SteamGameDetails } from '../models/steamModels';
 
 export class MongoDbService {
-  private client: MongoClient;
+  private readonly client: MongoClient;
   private db: Db | null = null;
-  private usersCollectionName = 'steam_users';
-  private gamesCollectionName = 'steam_games';
+  private readonly usersCollectionName = 'steam_users';
+  private readonly gamesCollectionName = 'steam_games';
 
   constructor(connectionString: string, dbName: string) {
     this.client = new MongoClient(connectionString);
@@ -46,9 +46,9 @@ export class MongoDbService {
     return this.db.collection<SteamUser>(this.usersCollectionName);
   }
 
-  private getGamesCollection(): Collection<SteamGame> {
+  private getGamesCollection(): Collection<SteamGameDetails> {
     if (!this.db) throw new Error('Database not connected');
-    return this.db.collection<SteamGame>(this.gamesCollectionName);
+    return this.db.collection<SteamGameDetails>(this.gamesCollectionName);
   }
 
   // ========== USERS CRUD ==========
@@ -108,33 +108,33 @@ export class MongoDbService {
 
   // ========== GAMES CRUD ==========
 
-  async createGame(game: SteamGame): Promise<void> {
+  async createGame(game: SteamGameDetails): Promise<void> {
     const collection = this.getGamesCollection();
     await collection.insertOne(game as any);
   }
 
-  async createGames(games: SteamGame[]): Promise<void> {
+  async createGames(games: SteamGameDetails[]): Promise<void> {
     if (games.length === 0) return;
     const collection = this.getGamesCollection();
     await collection.insertMany(games as any[], { ordered: false });
   }
 
-  async getGameByAppId(appId: number): Promise<SteamGame | null> {
+  async getGameByAppId(appId: number): Promise<SteamGameDetails | null> {
     const collection = this.getGamesCollection();
     return await collection.findOne({ appid: appId } as any);
   }
 
-  async findGames(filter: Filter<SteamGame>): Promise<SteamGame[]> {
+  async findGames(filter: Filter<SteamGameDetails>): Promise<SteamGameDetails[]> {
     const collection = this.getGamesCollection();
     return await collection.find(filter).toArray();
   }
 
-  async getAllGames(): Promise<SteamGame[]> {
+  async getAllGames(): Promise<SteamGameDetails[]> {
     const collection = this.getGamesCollection();
     return await collection.find({}).toArray();
   }
 
-  async updateGame(appId: number, update: Partial<SteamGame>): Promise<void> {
+  async updateGame(appId: number, update: Partial<SteamGameDetails>): Promise<void> {
     const collection = this.getGamesCollection();
     await collection.updateOne(
       { appid: appId } as any,
@@ -142,7 +142,7 @@ export class MongoDbService {
     );
   }
 
-  async upsertGame(game: SteamGame): Promise<void> {
+  async upsertGame(game: SteamGameDetails): Promise<void> {
     const collection = this.getGamesCollection();
     await collection.updateOne(
       { appid: game.appid } as any,
@@ -178,7 +178,7 @@ export class MongoDbService {
 // await mongoService.deleteUser('76561197960435530');
 //
 // // Робота з іграми
-// const game = new SteamGame(620, 'Portal 2');
+// const game = new SteamGameDetails(620, 'Portal 2');
 // await mongoService.createGame(game);
 // const foundGame = await mongoService.getGameByAppId(620);
 // await mongoService.updateGame(620, { owners: '5,000,000 .. 10,000,000' });
